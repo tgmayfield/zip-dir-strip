@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
@@ -34,12 +35,17 @@ namespace ZipDirStrip
 				throw new FileNotFoundException("Could not find ZIP file", file);
 			}
 
+			var directories = new List<ZipEntry>();
+
 			using (var zip = ZipFile.Read(file))
 			{
 				Console.Write("Renaming");
 
 				var entries = zip.ToArray();
 				int lastProgress = 0;
+
+				var usedDirectories = new Dictionary<string, bool>();
+
 				for (int index = 0; index < entries.Length; index++)
 				{
 					int progress = ((index + 1) * 100) / entries.Length;
@@ -52,11 +58,15 @@ namespace ZipDirStrip
 					var entry = entries[index];
 					if (entry.IsDirectory)
 					{
+						directories.Add(entry);
 						continue;
 					}
 
 					string orig = entry.FileName;
 					var stripped = GetStrippedName(entry.FileName);
+
+					string directory = stripped.Split('/').Reverse().Skip(1).Reverse().StringJoin("/");
+					usedDirectories[directory] = true;
 
 					try
 					{
@@ -68,6 +78,8 @@ namespace ZipDirStrip
 					}
 				}
 				Console.WriteLine();
+
+				zip.RemoveEntries(directories);
 
 				Console.Write("Saving  ");
 				lastProgress = 0;
