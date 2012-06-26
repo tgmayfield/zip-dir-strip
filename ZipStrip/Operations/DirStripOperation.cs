@@ -25,8 +25,13 @@ namespace ZipStrip.Operations
 			string stripped = GetStripped(entry.FileName);
 			if (stripped == null)
 			{
-				zip.RemoveEntry(entry);
-				return OperationResult.Removed;
+				if (entry.IsDirectory)
+				{
+					zip.RemoveEntry(entry);
+					return OperationResult.Removed;
+				}
+
+				stripped = orig;
 			}
 
 			try
