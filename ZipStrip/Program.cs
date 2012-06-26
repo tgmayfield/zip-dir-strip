@@ -109,8 +109,8 @@ namespace ZipStrip
 
 				bool changed;
 
-				Console.Write("Analyzing");
-				op.Run(zip, out changed);
+				Console.WriteLine("Analyzing");
+				op.Run(zip, OutputHelper.ProgressBarCallback, out changed);
 
 				if (!changed)
 				{
@@ -118,8 +118,8 @@ namespace ZipStrip
 					return 0;
 				}
 
-				Console.Write("Saving   ");
-				zip.RegisterIntegerSaveProgress();
+				Console.WriteLine("Saving   ");
+				zip.RegisterIntegerSaveProgress(OutputHelper.ProgressBarCallback);
 				zip.Save();
 				return 0;
 			}

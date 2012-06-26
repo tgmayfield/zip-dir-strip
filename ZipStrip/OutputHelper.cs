@@ -6,15 +6,61 @@ namespace ZipStrip
 {
 	public static class OutputHelper
 	{
-		private static void WriteDot(ZipFile zip, int progress)
+		/// <summary>
+		/// Inspiration: http://www.nullify.net/Article/269
+		/// </summary>
+		private static void DrawProgressBar(ZipFile zip, int progress, int total)
 		{
-			Console.Write(".");
-			if (progress == 100)
+			if (total == 0)
+			{
+				total = 1;
+			}
+			if (progress > total)
+			{
+				progress = total;
+			}
+
+			//draw empty progress bar
+			Console.CursorLeft = 0;
+			Console.Write("["); //start
+			Console.CursorLeft = 32;
+			Console.Write("]"); //end
+			Console.CursorLeft = 1;
+			float onechunk = 30.0f / total;
+
+			var originalBackground = Console.BackgroundColor;
+
+			//draw filled part
+			int position = 1;
+			for (int i = 0; i < onechunk * progress; i++)
+			{
+				Console.BackgroundColor = ConsoleColor.Gray;
+				Console.CursorLeft = position++;
+				Console.Write(" ");
+			}
+
+			//draw unfilled part
+			for (int i = position; i <= 31; i++)
+			{
+				Console.BackgroundColor = originalBackground;
+				Console.CursorLeft = position++;
+				Console.Write(" ");
+			}
+
+			//draw totals
+			Console.CursorLeft = 35;
+			Console.BackgroundColor = originalBackground;
+
+			string totalString = total.ToString("N0");
+			string progressString = progress.ToString("N0").PadLeft(totalString.Length, ' ');
+			Console.Write("{0} of {1}   ", progressString, totalString); // Extra spaces to provide room for other console output
+
+			if (progress == total)
 			{
 				Console.WriteLine();
 			}
 		}
 
-		public static readonly PercentProgressCallback DefaultCallback = WriteDot;
+		public static readonly ProgressCallback ProgressBarCallback = DrawProgressBar;
 	}
 }

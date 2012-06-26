@@ -41,11 +41,18 @@ namespace ZipDirStrip
 				var op = new DirStripOperation();
 				var runner = new ZipOperator(op);
 
-				Console.Write("Renaming");
-				runner.Run(zip);
+				bool changed;
+				Console.WriteLine("Renaming");
+				runner.Run(zip, OutputHelper.ProgressBarCallback, out changed);
 
-				Console.Write("Saving  ");
-				zip.RegisterIntegerSaveProgress();
+				if (!changed)
+				{
+					Console.WriteLine("No changes");
+					return;
+				}
+
+				Console.WriteLine("Saving");
+				zip.RegisterIntegerSaveProgress(OutputHelper.ProgressBarCallback);
 				zip.Save();
 			}
 		}
