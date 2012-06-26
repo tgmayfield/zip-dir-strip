@@ -59,6 +59,7 @@ namespace ZipStrip
 
 					if (result == OperationResult.Removed)
 					{
+						Console.Write("\nRemoved: {0}", entry.FileName);
 						wasChanged = true;
 						break;
 					}
