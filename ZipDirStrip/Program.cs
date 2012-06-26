@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 
 using Ionic.Zip;
+
+using ZipStrip;
+using ZipStrip.Operations;
 
 namespace ZipDirStrip
 {
@@ -35,97 +36,18 @@ namespace ZipDirStrip
 				throw new FileNotFoundException("Could not find ZIP file", file);
 			}
 
-			var directories = new List<ZipEntry>();
-
 			using (var zip = ZipFile.Read(file))
 			{
+				var op = new DirStripOperation();
+				var runner = new ZipOperator(op);
+
 				Console.Write("Renaming");
-
-				var entries = zip.ToArray();
-				int lastProgress = 0;
-
-				var usedDirectories = new Dictionary<string, bool>();
-
-				for (int index = 0; index < entries.Length; index++)
-				{
-					int progress = ((index + 1) * 100) / entries.Length;
-					if (progress != lastProgress && progress % 2 == 0)
-					{
-						Console.Write(".");
-						lastProgress = progress;
-					}
-
-					var entry = entries[index];
-					if (entry.IsDirectory)
-					{
-						directories.Add(entry);
-						continue;
-					}
-
-					string orig = entry.FileName;
-					var stripped = GetStrippedName(entry.FileName);
-
-					string directory = stripped.Split('/').Reverse().Skip(1).Reverse().StringJoin("/");
-					usedDirectories[directory] = true;
-
-					try
-					{
-						entry.FileName = stripped;
-					}
-					catch (Exception ex)
-					{
-						throw new Exception(string.Format("Could not rename '{0}' to '{1}'", orig, stripped), ex);
-					}
-				}
-				Console.WriteLine();
-
-				zip.RemoveEntries(directories);
+				runner.Run(zip);
 
 				Console.Write("Saving  ");
-				lastProgress = 0;
-				int total = 0;
-				zip.SaveProgress += (sender, eventArgs) =>
-				{
-					if (eventArgs.EntriesTotal != 0 && total == 0)
-					{
-						total = eventArgs.EntriesTotal;
-					}
-
-					if (eventArgs.EntriesSaved == 0)
-					{
-						return;
-					}
-
-					int progress;
-					if (total == 0)
-					{
-						progress = 0;
-					}
-					else
-					{
-						progress = (eventArgs.EntriesSaved * 100) / total;
-					}
-					if (progress != lastProgress && progress % 2 == 0)
-					{
-						Console.Write(".");
-						lastProgress = progress;
-					}
-				};
+				zip.RegisterIntegerSaveProgress();
 				zip.Save();
-				Console.WriteLine();
 			}
-		}
-
-		public static string GetStrippedName(string fileName)
-		{
-			string[] split = fileName.Split('/');
-			if (split.Length > 1)
-			{
-				split = split.Skip(1).ToArray();
-			}
-
-			string result = string.Join("/", split);
-			return result;
 		}
 	}
 }
