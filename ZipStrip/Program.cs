@@ -4,6 +4,7 @@ using System.ComponentModel.Composition.Hosting;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 
 using Ionic.Zip;
 
@@ -13,16 +14,25 @@ using ZipStrip.Operations;
 
 namespace ZipStrip
 {
-	class Program
+	public class Program
 	{
 		private readonly static string AssemblyDirectory = Path.GetDirectoryName(typeof(Program).Assembly.Location);
 		
-		static int Main(string[] args)
+		public static int Main(string[] args)
 		{
 			int result;
 			try
 			{
 				result = MainInside(args);
+			}
+			catch (ReflectionTypeLoadException ex)
+			{
+				Console.Error.WriteLine(ex);
+				foreach (var inner in ex.LoaderExceptions)
+				{
+					Console.Error.WriteLine("Loader exception: {0}", inner);
+				}
+				result = 1;
 			}
 			catch (Exception ex)
 			{

@@ -1,16 +1,11 @@
 ﻿using System;
 using System.IO;
 
-using Ionic.Zip;
-
-using ZipStrip;
-using ZipStrip.Operations;
-
 namespace ZipDirStrip
 {
-	class Program
+	internal class Program
 	{
-		static int Main(string[] args)
+		private static int Main(string[] args)
 		{
 			try
 			{
@@ -23,7 +18,8 @@ namespace ZipDirStrip
 				return 1;
 			}
 		}
-		static void MainInside(string[] args)
+
+		private static void MainInside(string[] args)
 		{
 			if (args.Length != 1)
 			{
@@ -36,25 +32,13 @@ namespace ZipDirStrip
 				throw new FileNotFoundException("Could not find ZIP file", file);
 			}
 
-			using (var zip = ZipFile.Read(file))
+			var delegateArgs = new[]
 			{
-				var op = new DirStripOperation();
-				var runner = new ZipOperator(op);
+				"--strip",
+				file,
+			};
 
-				bool changed;
-				Console.WriteLine("Renaming");
-				runner.Run(zip, OutputHelper.ProgressBarCallback, out changed);
-
-				if (!changed)
-				{
-					Console.WriteLine("No changes");
-					return;
-				}
-
-				Console.WriteLine("Saving");
-				zip.RegisterIntegerSaveProgress(OutputHelper.ProgressBarCallback);
-				zip.Save();
-			}
+			ZipStrip.Program.Main(delegateArgs);
 		}
 	}
 }
