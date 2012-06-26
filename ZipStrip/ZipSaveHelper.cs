@@ -14,10 +14,11 @@ namespace ZipStrip
 		public static void RegisterIntegerSaveProgress(this ZipFile zip, PercentProgressCallback callback)
 		{
 			int total = 0;
-			int lastProgress = 0;
+			int lastProgress = -1;
 			zip.SaveProgress += (sender, eventArgs) =>
 			{
-				if (eventArgs.EntriesTotal != 0 && total == 0)
+				if (eventArgs.EntriesTotal != 0
+					&& total == 0)
 				{
 					total = eventArgs.EntriesTotal;
 				}
@@ -26,7 +27,7 @@ namespace ZipStrip
 				{
 					return;
 				}
-
+				
 				int progress;
 				if (total == 0)
 				{
@@ -36,7 +37,9 @@ namespace ZipStrip
 				{
 					progress = (eventArgs.EntriesSaved * 100) / total;
 				}
-				if (progress != lastProgress && progress % 2 == 0)
+
+				if (progress != lastProgress
+					&& progress % 2 == 0)
 				{
 					callback(zip, progress);
 					lastProgress = progress;

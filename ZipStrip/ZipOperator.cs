@@ -22,15 +22,17 @@ namespace ZipStrip
 			_operations = operations.ToList();
 		}
 
-		public void Run(ZipFile zip)
+		public void Run(ZipFile zip, out bool wasChanged)
 		{
-			Run(zip, OutputHelper.DefaultCallback);
+			Run(zip, OutputHelper.DefaultCallback, out wasChanged);
 		}
 
-		public void Run(ZipFile zip, PercentProgressCallback callback)
+		public void Run(ZipFile zip, PercentProgressCallback callback, out bool wasChanged)
 		{
 			var entries = zip.ToArray();
 			var lastProgress = -1;
+
+			wasChanged = false;
 
 			for (var index = 0; index < entries.Length; index++)
 			{
@@ -58,6 +60,10 @@ namespace ZipStrip
 					if (result == OperationResult.Removed)
 					{
 						break;
+					}
+					if (result == OperationResult.Changed)
+					{
+						wasChanged = true;
 					}
 				}
 			}
