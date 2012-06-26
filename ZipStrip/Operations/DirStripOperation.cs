@@ -6,7 +6,7 @@ using Ionic.Zip;
 namespace ZipStrip.Operations
 {
 	public class DirStripOperation
-		: IZipOperation
+		: ZipOperation
 	{
 		protected virtual string GetStripped(string name)
 		{
@@ -19,17 +19,7 @@ namespace ZipStrip.Operations
 			return string.Join("/", split.Skip(1));
 		}
 
-		public OperationResult HandleFile(ZipEntry file, ZipFile zip)
-		{
-			return Handle(file, zip);
-		}
-
-		public OperationResult HandleDirectory(ZipEntry directory, ZipFile zip)
-		{
-			return Handle(directory, zip);
-		}
-
-		protected OperationResult Handle(ZipEntry entry, ZipFile zip)
+		protected override OperationResult Handle(ZipEntry entry, ZipFile zip)
 		{
 			string orig = entry.FileName;
 			string stripped = GetStripped(entry.FileName);

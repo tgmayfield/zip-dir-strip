@@ -56,6 +56,9 @@
     <Compile Include="Operations\DirStripOperation.cs" />
     <Compile Include="Operations\IZipOperationArgument.cs" />
     <Compile Include="Operations\OperationResult.cs" />
+    <Compile Include="Operations\RemoveOperation.cs" />
+    <Compile Include="Operations\RemoveOperationArguments.cs" />
+    <Compile Include="Operations\ZipOperation.cs" />
     <Compile Include="Operations\ZipOperationArgumentAttribute.cs" />
     <Compile Include="OutputHelper.cs" />
     <Compile Include="PercentProgressCallback.cs" />

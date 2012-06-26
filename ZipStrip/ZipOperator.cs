@@ -59,6 +59,7 @@ namespace ZipStrip
 
 					if (result == OperationResult.Removed)
 					{
+						wasChanged = true;
 						break;
 					}
 					if (result == OperationResult.Changed)
