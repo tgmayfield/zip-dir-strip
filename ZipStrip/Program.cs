@@ -52,8 +52,8 @@ namespace ZipStrip
 
 		static int MainInside(string[] args)
 		{
-			var dllCatalog = new DirectoryCatalog(AssemblyDirectory, "*.dll");
-			var exeCatalog = new DirectoryCatalog(AssemblyDirectory, "*.exe");
+			var dllCatalog = new DirectoryCatalog(AssemblyDirectory, "Zip*Strip*.dll");
+			var exeCatalog = new DirectoryCatalog(AssemblyDirectory, "Zip*Strip*.exe");
 			var catalog = new AggregateCatalog(dllCatalog, exeCatalog);
 			var mef = new CompositionContainer(catalog);
 
