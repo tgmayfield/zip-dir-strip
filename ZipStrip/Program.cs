@@ -58,7 +58,10 @@ namespace ZipStrip
 			var mef = new CompositionContainer(catalog);
 
 			var operationArguments = mef.GetExportedValues<IZipOperationArgument>();
-			var operations = new List<IZipOperation>();
+			var operations = new List<IZipOperation>()
+			{
+				new CleanDirectoryAttributesOperation(),
+			};
 
 			string file = null;
 			string output = null;

@@ -46,6 +46,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Operations\CleanDirectoryAttributesOperation.cs" />
     <Compile Include="Operations\DirStripOperationArgument.cs" />
     <Compile Include="Operations\IZipOperation.cs" />
     <Compile Include="Operations\DirStripOperation.cs" />
