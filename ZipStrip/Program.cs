@@ -61,9 +61,11 @@ namespace ZipStrip
 			var operations = new List<IZipOperation>();
 
 			string file = null;
+			string output = null;
 			var options = new OptionSet()
 			{
 				{ "file=", val => file = val },
+				{ "output=", val => output = val },
 			};
 			
 			foreach (var arg in operationArguments)
@@ -130,7 +132,15 @@ namespace ZipStrip
 
 				Console.WriteLine("Saving   ");
 				zip.RegisterIntegerSaveProgress(OutputHelper.ProgressBarCallback);
-				zip.Save();
+
+				if (output == null)
+				{
+					zip.Save();
+				}
+				else
+				{
+					zip.Save(output);
+				}
 				return 0;
 			}
 		}
