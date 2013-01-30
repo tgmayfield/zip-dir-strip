@@ -136,6 +136,11 @@ namespace ZipStrip
 				throw new FileNotFoundException("Could not find ZIP file", file);
 			}
 
+			foreach (var op in operations)
+			{
+				Console.WriteLine("Operation: {0}", op);
+			}
+
 			using (var zip = new ZipFile(file))
 			{
 				var op = new ZipOperator(operations);

@@ -9,10 +9,12 @@ namespace ZipStrip.Operations
 		: ZipOperation
 	{
 		private readonly Regex _regex;
+		private readonly string _displayPattern;
 
-		public RemoveOperation(Regex regex)
+		public RemoveOperation(Regex regex, string displayPattern)
 		{
 			_regex = regex;
+			_displayPattern = displayPattern;
 		}
 
 		protected override OperationResult Handle(ZipEntry entry, ZipFile zip)
@@ -24,6 +26,11 @@ namespace ZipStrip.Operations
 			}
 
 			return OperationResult.NoChange;
+		}
+
+		protected override string ArgumentsText
+		{
+			get { return _displayPattern; }
 		}
 	}
 }

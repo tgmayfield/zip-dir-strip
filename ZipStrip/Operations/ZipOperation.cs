@@ -18,5 +18,12 @@ namespace ZipStrip.Operations
 		}
 
 		protected abstract OperationResult Handle(ZipEntry entry, ZipFile zip);
+
+		public override string ToString()
+		{
+			return string.Format("{0}({1})", GetType().Name, ArgumentsText);
+		}
+
+		protected abstract string ArgumentsText { get; }
 	}
 }

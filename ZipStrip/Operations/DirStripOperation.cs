@@ -45,5 +45,10 @@ namespace ZipStrip.Operations
 				throw new Exception(string.Format("Could not rename {0} '{1}' to '{2}'", type, orig, stripped), ex);
 			}
 		}
+
+		protected override string ArgumentsText
+		{
+			get { return null; }
+		}
 	}
 }

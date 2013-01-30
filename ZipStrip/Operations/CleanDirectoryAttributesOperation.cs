@@ -18,5 +18,10 @@ namespace ZipStrip.Operations
 			// This just helps if a file is resaved. It shouldn't be treated as modified if this cleans something up.
 			return OperationResult.NoChange;
 		}
+
+		protected override string ArgumentsText
+		{
+			get { return null; }
+		}
 	}
 }
