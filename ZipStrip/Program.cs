@@ -104,6 +104,24 @@ namespace ZipStrip
 
 				Console.WriteLine("File: {0}", file);
 			}
+			if (output != null)
+			{
+				try
+				{
+					output = Path.GetFullPath(output);
+				}
+				catch (Exception ex)
+				{
+					Console.Error.WriteLine("Could not use '{0}' as a output name: {1}", output, ex.Message);
+					throw;
+				}
+
+				Console.WriteLine("Destination: {0}", output);
+			}
+			else
+			{
+				output = file;
+			}
 			if (unparsedArguments.Count > 0)
 			{
 				foreach (var arg in unparsedArguments)
@@ -133,17 +151,10 @@ namespace ZipStrip
 					return 0;
 				}
 
-				Console.WriteLine("Saving   ");
+				Console.WriteLine("Saving to {0}", output);
 				zip.RegisterIntegerSaveProgress(OutputHelper.ProgressBarCallback);
 
-				if (output == null)
-				{
-					zip.Save();
-				}
-				else
-				{
-					zip.Save(output);
-				}
+				zip.Save(output);
 				return 0;
 			}
 		}
