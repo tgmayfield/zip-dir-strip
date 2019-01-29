@@ -6,6 +6,11 @@ namespace ZipStrip
 {
 	public static class OutputHelper
 	{
+		private static ZipFile _last;
+		private static int _lastProgress;
+		private static int _lastTotal;
+		private static int _lastPercent;
+
 		/// <summary>
 		/// Inspiration: http://www.nullify.net/Article/269
 		/// </summary>
@@ -19,6 +24,21 @@ namespace ZipStrip
 			{
 				progress = total;
 			}
+
+			if (_last == zip)
+			{
+				if (_lastPercent == progress / total)
+				{
+					if (progress - _lastProgress < 50)
+					{
+						return;
+					}
+				}
+			}
+			_last = zip;
+			_lastProgress = progress;
+			_lastTotal = total;
+			_lastPercent = progress / total;
 
 			//draw empty progress bar
 			Console.CursorLeft = 0;
